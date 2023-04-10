@@ -86,3 +86,13 @@ resource "aws_security_group" "app_2048" {
     "Name" = "${local.environment}-2048-ecs-fargate"
   }
 }
+
+resource "aws_security_group_rule" "app_2048_all_http_out" {
+  description       = "Allow all outbound"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.app_2048.id
+}

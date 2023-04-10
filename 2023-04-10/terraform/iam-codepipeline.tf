@@ -81,8 +81,17 @@ data "aws_iam_policy_document" "codepipeline" {
       "codedeploy:GetApplication",
       "codedeploy:GetApplicationRevision",
       "codedeploy:RegisterApplicationRevision",
+      "codedeploy:GetDeploymentConfig",
+      "ecs:RegisterTaskDefinition"
     ]
     resources = ["*"]
+  }
+
+  statement {
+    sid       = "PassRole"
+    effect    = "Allow"
+    actions   = ["iam:PassRole"]
+    resources = [aws_iam_role.ecs_task_exec.arn]
   }
 
   #checkov:skip=CKV_AWS_109:Skipping Constraints for now
