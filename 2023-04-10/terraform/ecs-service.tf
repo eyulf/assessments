@@ -18,10 +18,21 @@ resource "aws_ecs_service" "main" {
     security_groups = [aws_security_group.app_2048.id]
   }
 
+  deployment_controller {
+    type = "CODE_DEPLOY"
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.app_2048_blue.arn
+    container_name   = "APPNAME"
+    container_port   = 80
+  }
+
   lifecycle {
     ignore_changes = [
       task_definition,
-      desired_count
+      desired_count,
+      load_balancer
     ]
   }
 }

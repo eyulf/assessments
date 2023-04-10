@@ -10,3 +10,8 @@ resource "aws_servicequotas_service_quota" "rules_per_security_group" {
   service_code = "vpc"
   value        = 125
 }
+
+resource "random_string" "cloudfront_auth" {
+  length  = 40
+  special = false
+}
