@@ -17,3 +17,20 @@ phases:
     commands:
       - echo Pushing the Docker images...
       - docker push "$REPOSITORY_URI:$IMAGE_TAG-$CODEBUILD_START_TIME"
+
+      - echo Writing image definitions file...
+      - printf '{"ImageURI":"%s"}' "$REPOSITORY_URI:$IMAGE_TAG-$CODEBUILD_START_TIME"  > imageDetail.json
+      - cat imageDetail.json
+
+      - sed -i 's|<APP_NAME>|'$APP_NAME'|g' appspec.yaml taskdef.json
+      - sed -i 's|<SERVICE_PORT>|'$SERVICE_PORT'|g' appspec.yaml taskdef.json
+      - sed -i 's|<IAM_EXEC_ROLE>|'$IAM_EXEC_ROLE'|g' taskdef.json
+      - sed -i 's|<IMAGE_NAME>|'$REPOSITORY_URI'\:'$IMAGE_TAG-$CODEBUILD_START_TIME'|g' taskdef.json
+      - sed -i 's|<CPU>|'$CPU'|g' taskdef.json
+      - sed -i 's|<MEMORY>|'$MEMORY'|g' taskdef.json
+
+artifacts:
+  files:
+    - appspec.yaml
+    - taskdef.json
+    - imageDetail.json

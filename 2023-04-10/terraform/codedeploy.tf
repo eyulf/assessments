@@ -1,7 +1,7 @@
 ### Application
 
 resource "aws_codedeploy_app" "app_2048" {
-  name             = "app_2048"
+  name             = "${local.environment}-2048"
   compute_platform = "ECS"
 }
 
@@ -10,7 +10,7 @@ resource "aws_codedeploy_app" "app_2048" {
 resource "aws_codedeploy_deployment_group" "app_2048" {
   app_name               = aws_codedeploy_app.app_2048.name
   deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"
-  deployment_group_name  = "app_2048"
+  deployment_group_name  = "${local.environment}-2048"
   service_role_arn       = aws_iam_role.codedeploy.arn
 
   auto_rollback_configuration {

@@ -52,6 +52,22 @@ locals {
     {
       "name"  = "IMAGE_TAG",
       "value" = "app-2048",
+    },
+    {
+      "name"  = "SERVICE_PORT",
+      "value" = "80",
+    },
+    {
+      "name"  = "IAM_EXEC_ROLE",
+      "value" = aws_iam_role.ecs_task_exec.arn,
+    },
+    {
+      "name"  = "CPU",
+      "value" = "256",
+    },
+    {
+      "name"  = "MEMORY",
+      "value" = "512",
     }
   ]
 }

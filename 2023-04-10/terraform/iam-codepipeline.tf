@@ -72,6 +72,19 @@ data "aws_iam_policy_document" "codepipeline" {
     resources = [aws_codebuild_project.app_2048.arn]
   }
 
+  statement {
+    sid    = "ECSCodeDeploy"
+    effect = "Allow"
+    actions = [
+      "codedeploy:CreateDeployment",
+      "codedeploy:GetDeployment",
+      "codedeploy:GetApplication",
+      "codedeploy:GetApplicationRevision",
+      "codedeploy:RegisterApplicationRevision",
+    ]
+    resources = ["*"]
+  }
+
   #checkov:skip=CKV_AWS_109:Skipping Constraints for now
   #checkov:skip=CKV_AWS_111:Skipping Constraints for now
 }

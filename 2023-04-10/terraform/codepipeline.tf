@@ -51,14 +51,24 @@ resource "aws_codepipeline" "app_2048" {
   }
 
   stage {
-    name = "Approve"
+    name = "Deploy"
 
     action {
-      name     = "Approval"
-      category = "Approval"
-      owner    = "AWS"
-      provider = "Manual"
-      version  = "1"
+      name            = "Deploy"
+      category        = "Deploy"
+      owner           = "AWS"
+      provider        = "CodeDeployToECS"
+      input_artifacts = ["task"]
+      version         = "1"
+
+      configuration = {
+        ApplicationName                = "${local.environment}-2048"
+        DeploymentGroupName            = "${local.environment}-2048"
+        TaskDefinitionTemplateArtifact = "task"
+        TaskDefinitionTemplatePath     = "taskdef.json"
+        AppSpecTemplateArtifact        = "task"
+        AppSpecTemplatePath            = "appspec.yaml"
+      }
     }
   }
 }
