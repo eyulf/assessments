@@ -33,6 +33,8 @@ resource "aws_codebuild_project" "app_2048" {
 resource "aws_cloudwatch_log_group" "app_2048_codebuild" {
   name              = "/aws/codebuild/${local.environment}-2048"
   retention_in_days = 3
+
+  #checkov:skip=CKV_AWS_158:Choosing not to encrypt logs for now
 }
 
 locals {

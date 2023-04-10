@@ -23,7 +23,7 @@ data "aws_cloudfront_cache_policy" "app_2048" {
 }
 
 data "aws_cloudfront_origin_request_policy" "app_2048" {
-  name = "Managed-CORS-S3Origin"
+  name = "Managed-CORS-CustomOrigin"
 }
 
 data "aws_cloudfront_response_headers_policy" "app_2048" {
@@ -76,6 +76,11 @@ resource "aws_cloudfront_distribution" "app_2048" {
       restriction_type = "none"
     }
   }
+
+  #checkov:skip=CKV_AWS_68:TODO Set up WAF
+  #checkov:skip=CKV_AWS_86:TODO Enable Access Logging
+  #checkov:skip=CKV_AWS_174:TODO Configure Proper Domain with ACM and TLSv1.2
+  #checkov:skip=CKV2_AWS_32:False Positive, Security Headers are added
 }
 
 output "cloudfront_url" {

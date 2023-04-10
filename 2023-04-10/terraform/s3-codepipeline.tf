@@ -1,5 +1,11 @@
 resource "aws_s3_bucket" "codepipeline" {
   bucket_prefix = "codepipeline-${local.environment}-2048-"
+
+  #checkov:skip=CKV_AWS_18:Access Logging not required
+  #checkov:skip=CKV_AWS_19:Data is encrypted with KMS below
+  #checkov:skip=CKV_AWS_21:Versioning is enabled below
+  #checkov:skip=CKV_AWS_144:Cross-region replication not required
+  #checkov:skip=CKV_AWS_145:Data is encrypted with KMS below
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "codepipeline" {

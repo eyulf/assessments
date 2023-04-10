@@ -91,6 +91,6 @@ data "aws_iam_policy_document" "codebuild" {
     ]
   }
 
-  #checkov:skip=CKV_AWS_109:Skipping Constraints for now
-  #checkov:skip=CKV_AWS_111:Skipping Constraints for now
+  #checkov:skip=CKV_AWS_109:TODO Fine tune Least-Privilege access
+  #checkov:skip=CKV_AWS_111:TODO Fine tune Least-Privilege access
 }

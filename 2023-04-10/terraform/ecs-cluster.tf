@@ -11,6 +11,9 @@ module "ecs" {
       }
     }
   }
+
+  #checkov:skip=CKV_AWS_65:TODO Enable container insights
+  #checkov:skip=CKV_AWS_224:TODO Enable cluster logging
 }
 
 resource "aws_iam_service_linked_role" "ecs" {

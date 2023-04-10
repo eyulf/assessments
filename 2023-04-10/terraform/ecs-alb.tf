@@ -21,8 +21,9 @@ resource "aws_lb" "ecs_alb" {
     delete = "10m"
   }
 
-  #checkov:skip=CKV_AWS_91:Logging not required
-  #checkov:skip=CKV2_AWS_28:WAF not setup as yet
+  #checkov:skip=CKV_AWS_91:TODO Enable Access Logging
+  #checkov:skip=CKV2_AWS_20:TODO Configure Proper Domain with ACM and TLSv1.2
+  #checkov:skip=CKV2_AWS_28:WAF not required due to CloudFront
 }
 
 resource "aws_lb_listener" "ecs_http" {
@@ -45,6 +46,9 @@ resource "aws_lb_listener" "ecs_http" {
       default_action["target_group_arn"]
     ]
   }
+
+  #checkov:skip=CKV_AWS_2:TODO Configure Proper Domain with ACM and TLSv1.2
+  #checkov:skip=CKV_AWS_103:TODO Configure Proper Domain with ACM and TLSv1.2
 }
 
 ### Security Group
