@@ -32,7 +32,8 @@ resource "aws_ecs_service" "main" {
     ignore_changes = [
       task_definition,
       desired_count,
-      load_balancer
+      load_balancer,
+      capacity_provider_strategy
     ]
   }
 }
@@ -85,6 +86,16 @@ resource "aws_security_group" "app_2048" {
   tags = {
     "Name" = "${local.environment}-2048-ecs-fargate"
   }
+}
+
+resource "aws_security_group_rule" "app_2048_ecs_alb_http_in" {
+  description              = "HTTP in from ${local.environment}-ecs-alb"
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.ecs_alb.id
+  security_group_id        = aws_security_group.app_2048.id
 }
 
 resource "aws_security_group_rule" "app_2048_all_http_out" {
