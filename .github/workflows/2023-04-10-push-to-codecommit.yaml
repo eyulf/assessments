@@ -34,7 +34,7 @@ jobs:
 
       - name:  Copy files from source to destination
         run: |
-          ls -lah source
+          ls -lah
           rsync -avz --exclude=".git" source/2023-04-10/git/ destination
 
       - name:  Commit and Push copied files
