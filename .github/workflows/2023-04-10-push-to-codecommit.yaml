@@ -1,0 +1,49 @@
+---
+name: Push 2023-04-10/git to CodeCommit
+
+on:
+  push:
+    branches:
+      - nginx_ecs_public
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  CodeCommitUpload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the repository to source
+        uses: actions/checkout@v3
+        with:
+          path: source
+
+      - name: Install git-remote-codecommit
+        run: |
+          pip install git-remote-codecommit
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_ROLE_NAME }}
+          role-session-name: github-deploy
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Clone existing CodeCommit repository to destination
+        run: |
+          git clone -b ${{ github.ref_name }} codecommit::${{ secrets.AWS_REGION }}://${{ secrets.CODECOMMIT_REPO }} destination
+
+      - name:  Copy files from source to destination
+        run: |
+          rsync -avz --exclude=".git" source/2023-04-10/git/ destination
+
+      - name:  Commit and Push copied files
+        run: |
+          cd destination
+          ls -lah
+          git add .
+          git config user.name "Github Deploy - ${{ github.actor }}"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Deploy Release to ${{ github.ref_name }}: ${{ github.sha }}"
+          git push

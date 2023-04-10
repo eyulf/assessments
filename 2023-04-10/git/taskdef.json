@@ -1,0 +1,39 @@
+{
+  "family": "<APP_NAME>",
+  "executionRoleArn": "<IAM_EXEC_ROLE>",
+  "networkMode": "awsvpc",
+  "containerDefinitions": [
+    {
+      "name": "<APP_NAME>",
+      "image": "<IMAGE_NAME>",
+      "cpu": <CPU>,
+      "memory": <MEMORY>,
+      "memoryReservation": <MEMORY>,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": <SERVICE_PORT>,
+          "hostPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "<SERVICE_PORT>"
+        },
+        {
+          "name": "APP_NAME",
+          "value": "<APP_NAME>"
+        }
+      ],
+      "mountPoints": []
+    }
+  ],
+  "volumes": [],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "<CPU>",
+  "memory": "<MEMORY>"
+}
