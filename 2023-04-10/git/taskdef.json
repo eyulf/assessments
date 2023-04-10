@@ -12,9 +12,9 @@
       "essential": true,
       "portMappings": [
         {
-          "containerPort": <SERVICE_PORT>
+          "containerPort": <SERVICE_PORT>,
           "hostPort": 80,
-          "protocol": "tcp",
+          "protocol": "tcp"
         }
       ],
       "environment": [
@@ -35,5 +35,5 @@
     "FARGATE"
   ],
   "cpu": "<CPU>",
-  "memory": "<MEMORY>",
+  "memory": "<MEMORY>"
 }
