@@ -44,5 +44,6 @@ jobs:
           ls -lah
           git add .
           git config user.name "Github Deploy - ${{ github.actor }}"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Deploy Release to ${{ github.ref_name }}: ${{ github.sha }}"
           git push
