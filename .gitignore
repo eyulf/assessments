@@ -1,0 +1,21 @@
+#  Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+**.tfstate
+**.tfstate.*
+
+# .plan files
+**.plan
+**.plan.*
+
+# .swp files
+**.swp
+
+# .hcl files
+**.hcl
+!**.tflint.hcl
+
+# Checkov
+.external_modules/
+.external_modules/**
