@@ -24,7 +24,7 @@ resource "aws_ecr_repository" "app_2048" {
 
   encryption_configuration {
     encryption_type = "KMS"
-    kms_key         = aws_kms_alias.main.target_key_arn
+    kms_key         = aws_kms_alias.cicd.target_key_arn
   }
 }
 
