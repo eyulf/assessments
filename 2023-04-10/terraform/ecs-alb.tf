@@ -22,7 +22,7 @@ resource "aws_lb" "ecs_alb" {
   }
 
   #checkov:skip=CKV_AWS_91:TODO Enable Access Logging
-  #checkov:skip=CKV2_AWS_20:TODO Configure Proper Domain with ACM and TLSv1.2
+  #che ckov:skip=CKV2_AWS_20:TODO Configure Proper Domain with ACM and TLSv1.2
   #checkov:skip=CKV2_AWS_28:WAF not required due to CloudFront
 }
 
@@ -30,6 +30,24 @@ resource "aws_lb_listener" "ecs_http" {
   load_balancer_arn = aws_lb.ecs_alb.arn
   port              = "80"
   protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_lb_listener" "ecs_https" {
+  load_balancer_arn = aws_lb.ecs_alb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-0-2021-06"
+  certificate_arn   = aws_acm_certificate.main.arn
 
   default_action {
     type = "fixed-response"
@@ -47,8 +65,7 @@ resource "aws_lb_listener" "ecs_http" {
     ]
   }
 
-  #checkov:skip=CKV_AWS_2:TODO Configure Proper Domain with ACM and TLSv1.2
-  #checkov:skip=CKV_AWS_103:TODO Configure Proper Domain with ACM and TLSv1.2
+  #checkov:skip=CKV_AWS_103:False Positive, this is using TLS 1.3
 }
 
 ### Security Group
@@ -63,11 +80,11 @@ resource "aws_security_group" "ecs_alb" {
   }
 }
 
-resource "aws_security_group_rule" "ecs_alb_cloudfront_http_in" {
-  description       = "HTTP in from CloudFront"
+resource "aws_security_group_rule" "ecs_alb_cloudfront_https_in" {
+  description       = "HTTPS in from CloudFront"
   type              = "ingress"
-  from_port         = 80
-  to_port           = 80
+  from_port         = 443
+  to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = data.aws_ip_ranges.cloudfront.cidr_blocks
   ipv6_cidr_blocks  = data.aws_ip_ranges.cloudfront.ipv6_cidr_blocks
@@ -82,4 +99,18 @@ resource "aws_security_group_rule" "ecs_alb_app_2048_http_out" {
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.app_2048.id
   security_group_id        = aws_security_group.ecs_alb.id
+}
+
+### Route 53
+
+resource "aws_route53_record" "fe_lb" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "alb.${local.environment}.${local.zone}"
+  type    = "A"
+
+  alias {
+    name                   = aws_lb.ecs_alb.dns_name
+    zone_id                = aws_lb.ecs_alb.zone_id
+    evaluate_target_health = true
+  }
 }

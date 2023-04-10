@@ -1,6 +1,6 @@
 ### ECS Service
 
-resource "aws_ecs_service" "main" {
+resource "aws_ecs_service" "app_2048" {
   name    = "${local.environment}-2048"
   cluster = module.ecs.cluster_id
 

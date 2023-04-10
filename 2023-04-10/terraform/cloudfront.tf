@@ -38,14 +38,16 @@ resource "aws_cloudfront_distribution" "app_2048" {
   default_root_object = "index.html"
   http_version        = "http2and3"
 
+  aliases = ["2048.${local.environment}.${local.zone}"]
+
   origin {
     origin_id   = "ECS-${local.environment}-2048"
-    domain_name = aws_lb.ecs_alb.dns_name
+    domain_name = "alb.${local.environment}.${local.zone}"
 
     custom_origin_config {
       http_port              = 80
       https_port             = 443
-      origin_protocol_policy = "http-only"
+      origin_protocol_policy = "https-only"
       origin_ssl_protocols   = ["TLSv1.2"]
     }
 
@@ -68,7 +70,10 @@ resource "aws_cloudfront_distribution" "app_2048" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn            = aws_acm_certificate.cloudfront.arn
+    cloudfront_default_certificate = false
+    ssl_support_method             = "sni-only"
+    minimum_protocol_version       = "TLSv1.2_2021"
   }
 
   restrictions {
@@ -79,7 +84,6 @@ resource "aws_cloudfront_distribution" "app_2048" {
 
   #checkov:skip=CKV_AWS_68:TODO Set up WAF
   #checkov:skip=CKV_AWS_86:TODO Enable Access Logging
-  #checkov:skip=CKV_AWS_174:TODO Configure Proper Domain with ACM and TLSv1.2
   #checkov:skip=CKV2_AWS_32:False Positive, Security Headers are added
 }
 
