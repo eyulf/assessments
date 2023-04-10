@@ -54,6 +54,10 @@ locals {
       "value" = "app-2048",
     },
     {
+      "name"  = "APP_NAME",
+      "value" = "${local.environment}-2048",
+    },
+    {
       "name"  = "SERVICE_PORT",
       "value" = "80",
     },
