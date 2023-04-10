@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "codepipeline" {
       "codecommit:GetUploadArchiveStatus",
       "codecommit:CancelUploadArchive"
     ]
-    resources = ["*"]
+    resources = [aws_codecommit_repository.app_2048.arn]
   }
 
   statement {
@@ -60,6 +60,16 @@ data "aws_iam_policy_document" "codepipeline" {
     effect = "Allow"
     actions = ["kms:*"]
     resources = [aws_kms_alias.cicd.target_key_arn]
+  }
+
+  statement {
+    sid    = "Codebuild"
+    effect = "Allow"
+    actions = [
+      "codebuild:BatchGetBuilds",
+      "codebuild:StartBuild"
+    ]
+    resources = [aws_codebuild_project.app_2048.arn]
   }
 
   #checkov:skip=CKV_AWS_109:Skipping Constraints for now
