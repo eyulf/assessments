@@ -16,6 +16,7 @@ jobs:
     steps:
       - name: Clone the repository to source
         uses: actions/checkout@v3
+        path: source
 
       - name: Install git-remote-codecommit
         run: |
@@ -35,6 +36,7 @@ jobs:
       - name:  Copy files from source to destination
         run: |
           ls -lah
+          ls -lah source
           rsync -avz --exclude=".git" source/2023-04-10/git/ destination
 
       - name:  Commit and Push copied files
